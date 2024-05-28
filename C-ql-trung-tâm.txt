@@ -1,0 +1,261 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+class KhoaHoc {
+public:
+    string maKhoaHoc;
+    string tenKhoaHoc;
+
+    KhoaHoc(string maKhoaHoc, string tenKhoaHoc) {
+        this->maKhoaHoc = maKhoaHoc;
+        this->tenKhoaHoc = tenKhoaHoc;
+    }
+
+    void hienThi() {
+        cout << "Mã khóa học: " << maKhoaHoc << ", Tên khóa học: " << tenKhoaHoc << endl;
+    }
+};
+
+class SinhVien {
+public:
+    string maSo;
+    string ten;
+    int tuoi;
+    string maKhoaHoc;
+
+    SinhVien(string maSo, string ten, int tuoi, string maKhoaHoc) {
+        this->maSo = maSo;
+        this->ten = ten;
+        this->tuoi = tuoi;
+        this->maKhoaHoc = maKhoaHoc;
+    }
+
+    void hienThi() {
+        cout << "Mã số: " << maSo << ", Tên: " << ten << ", Tuổi: " << tuoi << ", Mã khóa học: " << maKhoaHoc << endl;
+    }
+};
+
+class QuanLySinhVien {
+private:
+    vector<SinhVien*> sinhVienList;
+
+public:
+    void themSinhVien(string maSo, string ten, int tuoi, string maKhoaHoc) {
+        SinhVien* sinhVienMoi = new SinhVien(maSo, ten, tuoi, maKhoaHoc);
+        sinhVienList.push_back(sinhVienMoi);
+        cout << "Thêm sinh viên thành công!\n";
+    }
+
+    void xoaSinhVien(string maSo) {
+    for (int i = 0; i < sinhVienList.size(); ++i) {
+        if (sinhVienList[i]->maSo == maSo) {
+            delete sinhVienList[i];
+            sinhVienList.erase(sinhVienList.begin() + i);
+            cout << "Xóa sinh viên thành công!\n";
+            return;
+        }
+    }
+    cout << "Không tìm thấy sinh viên với mã số này.\n";
+}
+
+    void suaSinhVien(string maSo, string ten, int tuoi, string maKhoaHoc) {
+        for (SinhVien* sinhVien : sinhVienList) {
+            if (sinhVien->maSo == maSo) {
+                sinhVien->ten = ten;
+                sinhVien->tuoi = tuoi;
+                sinhVien->maKhoaHoc = maKhoaHoc;
+                cout << "Sửa sinh viên thành công!\n";
+                return;
+            }
+        }
+        cout << "Không tìm thấy sinh viên với mã số này.\n";
+    }
+
+    void hienThiSinhVien() {
+        for (SinhVien* sinhVien : sinhVienList) {
+            sinhVien->hienThi();
+        }
+    }
+
+    ~QuanLySinhVien() {
+        for (SinhVien* sinhVien : sinhVienList) {
+            delete sinhVien;
+        }
+    }
+};
+
+class QuanLyKhoaHoc {
+private:
+    vector<KhoaHoc*> khoaHocList;
+
+public:
+    void themKhoaHoc(string maKhoaHoc, string tenKhoaHoc) {
+        KhoaHoc* khoaHocMoi = new KhoaHoc(maKhoaHoc, tenKhoaHoc);
+        khoaHocList.push_back(khoaHocMoi);
+        cout << "Thêm khóa học thành công!\n";
+    }
+
+    void xoaKhoaHoc(string maKhoaHoc) {
+    for (int i = 0; i < khoaHocList.size(); ++i) {
+        if (khoaHocList[i]->maKhoaHoc == maKhoaHoc) {
+            delete khoaHocList[i];
+            khoaHocList.erase(khoaHocList.begin() + i);
+            cout << "Xóa khóa học thành công!\n";
+            return;
+        }
+    }
+    cout << "Không tìm thấy khóa học với mã này.\n";
+    }
+
+    void suaKhoaHoc(string maKhoaHoc, string tenKhoaHoc) {
+        for (KhoaHoc* khoaHoc : khoaHocList) {
+            if (khoaHoc->maKhoaHoc == maKhoaHoc) {
+                khoaHoc->tenKhoaHoc = tenKhoaHoc;
+                cout << "Sửa khóa học thành công!\n";
+                return;
+            }
+        }
+        cout << "Không tìm thấy khóa học với mã này.\n";
+    }
+
+    void hienThiKhoaHoc() {
+        for (KhoaHoc* khoaHoc : khoaHocList) {
+            khoaHoc->hienThi();
+        }
+    }
+
+    bool kiemTraMaKhoaHoc(string maKhoaHoc) {
+        for (KhoaHoc* khoaHoc : khoaHocList) {
+            if (khoaHoc->maKhoaHoc == maKhoaHoc) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    ~QuanLyKhoaHoc() {
+        for (KhoaHoc* khoaHoc : khoaHocList) {
+            delete khoaHoc;
+        }
+    }
+};
+
+int main() {
+    QuanLyKhoaHoc qlKhoaHoc;
+    QuanLySinhVien qlSinhVien;
+
+    int luaChon;
+
+    do {
+        cout << "================== MENU ==================\n";
+        cout << "1. Thêm khóa học\n";
+        cout << "2. Sửa khóa học\n";
+        cout << "3. Xóa khóa học\n";
+        cout << "4. Hiển thị tất cả khóa học\n";
+        cout << "5. Thêm sinh viên\n";
+        cout << "6. Sửa sinh viên\n";
+        cout << "7. Xóa sinh viên\n";
+        cout << "8. Hiển thị tất cả sinh viên\n";
+        cout << "0. Thoát\n";
+        cout << "Nhập lựa chọn của bạn: ";
+        cin >> luaChon;
+
+        switch (luaChon) {
+            case 1: {
+                string maKhoaHoc, tenKhoaHoc;
+                cout << "Nhập mã khóa học: ";
+                cin >> maKhoaHoc;
+                cout << "Nhập tên khóa học: ";
+                cin.ignore();
+                getline(cin, tenKhoaHoc);
+                qlKhoaHoc.themKhoaHoc(maKhoaHoc, tenKhoaHoc);
+                break;
+            }
+            case 2: {
+                string maKhoaHoc, tenKhoaHoc;
+                cout << "Nhập mã khóa học cần sửa: ";
+                cin >> maKhoaHoc;
+                cout << "Nhập tên khóa học mới: ";
+                cin.ignore();
+                getline(cin, tenKhoaHoc);
+                qlKhoaHoc.suaKhoaHoc(maKhoaHoc, tenKhoaHoc);
+                break;
+            }
+            case 3: {
+                string maKhoaHoc;
+                cout << "Nhập mã khóa học cần xóa: ";
+                cin >> maKhoaHoc;
+                qlKhoaHoc.xoaKhoaHoc(maKhoaHoc);
+                break;
+            }
+            case 4: {
+                qlKhoaHoc.hienThiKhoaHoc();
+                break;
+            }
+            case 5: {
+                string maSo, ten, maKhoaHoc;
+                int tuoi;
+                cout << "Nhập mã số sinh viên: ";
+                cin >> maSo;
+                cout << "Nhập tên sinh viên: ";
+                cin.ignore();
+                getline(cin, ten);
+                cout << "Nhập tuổi sinh viên: ";
+                cin >> tuoi;
+                cout << "Nhập mã khóa học: ";
+                cin >> maKhoaHoc;
+
+                if (!qlKhoaHoc.kiemTraMaKhoaHoc(maKhoaHoc)) {
+                    cout << "Mã khóa học không tồn tại.\n";
+                } else {
+                    qlSinhVien.themSinhVien(maSo, ten, tuoi, maKhoaHoc);
+                }
+                break;
+            }
+            case 6: {
+                string maSo, ten, maKhoaHoc;
+                int tuoi;
+                cout << "Nhập mã số sinh viên cần sửa: ";
+                cin >> maSo;
+                cout << "Nhập tên mới của sinh viên: ";
+                cin.ignore();
+                getline(cin, ten);
+                cout << "Nhập tuổi mới của sinh viên: ";
+                cin >> tuoi;
+                cout << "Nhập mã khóa học mới: ";
+                cin >> maKhoaHoc;
+
+                if (!qlKhoaHoc.kiemTraMaKhoaHoc(maKhoaHoc)) {
+                    cout << "Mã khóa học không tồn tại.\n";
+                } else {
+                    qlSinhVien.suaSinhVien(maSo, ten, tuoi, maKhoaHoc);
+                }
+                break;
+            }
+            case 7: {
+                string maSo;
+                cout << "Nhập mã số sinh viên cần xóa: ";
+                cin >> maSo;
+                qlSinhVien.xoaSinhVien(maSo);
+                break;
+            }
+            case 8: {
+                qlSinhVien.hienThiSinhVien();
+                break;
+            }
+            case 0: {
+                cout << "Thoát chương trình.\n";
+                break;
+            }
+            default: {
+                cout << "Lựa chọn không hợp lệ, vui lòng chọn lại.\n";
+                break;
+            }
+        }
+    } while (luaChon != 0);
+
+    return 0;
+}
